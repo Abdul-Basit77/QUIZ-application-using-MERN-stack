@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800");
+
+.card{
+    width: 470px;
+    height: 650px;
+    background: #031730;
+    position: absolute;
+    display: flex;
+    justify-content: space-between;
+    place-content: center;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 22px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+}
+
+.card h3{
+    z-index: 1;
+    color: white;
+    font-size: 2rem;
+    margin-top: 5px;
+}
+
+.card p{
+    z-index: 1;
+    color: white;
+    font-size: 1.5rem;
+    margin: 14px;
+}
+
+.card::before{
+    content: "";
+    position: absolute;
+    width: 100px;
+    background-image: linear-gradient(100deg,   rgb(0, 183, 255), rgb(255, 48, 255));
+    height: 180%;
+    animation: rotBGimg 7s linear infinite;
+    transition: all 0.2s linear;
+}
+
+@keyframes rotBGimg{
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}
+
+.card::after{
+    content: "";
+    position: absolute;
+    background: #031730;
+    inset: 2.5px;
+    border-radius: 20px;
+}
+
+ul li{
+    list-style: none;
+}
+
+ 
