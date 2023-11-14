@@ -11,7 +11,7 @@ export default function AboutUs(){
             Abdul Basit
           </li>
           <li>
-            Shiwam Kumar
+            Yasir Khan
           </li>
           <li>
             Shiwam Kumar
