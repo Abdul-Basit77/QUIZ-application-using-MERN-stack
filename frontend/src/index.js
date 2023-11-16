@@ -10,6 +10,7 @@ import SignUp from './components/signup.component'
 import Home from './components/homePage'
 import AboutUs from './components/aboutPage'
 import UserDetails from "./main/userDetails";
+import Quiz from './main/quiz';
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/userDetails" element={<UserDetails />} />
+            <Route path="/quiz" element={<Quiz />} />
           </Routes>
         </div>
       </div>

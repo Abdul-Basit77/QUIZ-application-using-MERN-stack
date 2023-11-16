@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 body {
-  background-image: url(bgimg.png);
+  background-image: url(./assets/bgimg.png);
   background-size: cover;
   min-height: 100vh;
   display: flex;
@@ -45,13 +45,13 @@ html,
 
 .nav-right {
   font-size: 20px;
-  margin-right: 5rem;
+  margin-right: 1rem;
 }
 
 .nav-list {
   list-style: none;
   display: flex;
-  font-weight: 500;
+  font-weight: 450;
 
 }
 

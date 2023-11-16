@@ -72,7 +72,7 @@ export default function SignUp() {
             <div className="input-box">
               <label>Secret Key</label>
               <input
-                type="text"
+                type="password"
                 className="form-control"
                 placeholder="Secret Key"
                 onChange={(e) => setSecretKey(e.target.value)}
@@ -116,7 +116,7 @@ export default function SignUp() {
             </button>
           
           <p className="bottom-text">
-            Already registered <a href="/sign-in">sign in?</a>
+            Already registered <a href="/login">sign in?</a>
           </p>
         </form>
       </div>

@@ -1,5 +1,5 @@
 import React from 'react'
-import "../components/component.css"
+import "./userHome.css"
 // export default function UserHome({ userData }){
 //     return(
 //             <div class="main-div">
@@ -40,7 +40,12 @@ export default function UserHome({ userData }){
         <div className="auth-wrapper" style={{ height: "auto" }}>
           <div className="auth-inner glass" style={{ width: "auto" }}>
             <h3>Welcom User</h3>
-            
+            <p>
+              Quiz details will be displayed here
+              <a href="/quiz" >
+                <button>Start Quiz</button>
+              </a>
+            </p>
           </div>
         </div>
       );

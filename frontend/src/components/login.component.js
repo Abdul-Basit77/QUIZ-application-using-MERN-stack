@@ -69,7 +69,7 @@ export default function Login() {
             </button>
           
           <p className="bottom-text">
-              New here : <a href="/sign-up">Sign Up</a>
+              New here : <a href="/signup">Sign Up</a>
           </p>
         </form>
       </div>
