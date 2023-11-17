@@ -18,7 +18,7 @@ mongoose.connect(mongoUrl, {
   })
   .catch((e) => console.log(e));
 
-require("./userDetails");
+require("./schema/userDetails");
 const User = mongoose.model("UserInfo");
 
 app.post("/register", async (req, res) => {
@@ -89,6 +89,37 @@ app.post("/userData", async (req, res) => {
   } catch (error) { }
 });
 
+// question answer API
+require("./schema/questions")
+const Que = mongoose.model("QueAns");
+
+// Inside your app.post("/uploadQue", ...) route
+app.post("/uploadQue", async (req, res) => {
+  try {
+    const { type, que, choices, answer, score } = req.body;
+
+    // Your existing code for creating the question
+    await Que.create({
+      type,
+      que,
+      choices,
+      answer,
+      score
+    });
+
+    // Send a success response
+    res.json({ status: "ok" });
+  } catch (error) {
+    console.error("Error in uploading question:", error);
+    // Log the error stack trace
+    console.error(error.stack);
+
+    // Send an error response
+    res.status(500).json({ status: "error", message: "An error occurred. Please try again." });
+  }
+});
+
+
 app.listen(5000, () => {
-  console.log("Server Started");
+  console.log("Server Started, Connecting to DataBase...");
 });
