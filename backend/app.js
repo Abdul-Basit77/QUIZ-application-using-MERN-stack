@@ -119,6 +119,14 @@ app.post("/uploadQue", async (req, res) => {
   }
 });
 
+app.get("/getQuestions" , async (req, res) => {
+  try{
+    const queDetails = await Que.find({});
+    res.send({status: "ok", data: queDetails});
+  }catch(error){
+    console.log(error);
+  }
+});
 
 app.listen(5000, () => {
   console.log("Server Started, Connecting to DataBase...");

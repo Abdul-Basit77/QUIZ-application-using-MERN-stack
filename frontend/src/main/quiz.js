@@ -179,35 +179,93 @@
 
 // export default QuizQues;
 
-import React from "react";
-import Questions from "./questions"
-import "./userHome.css"
+import React, { useEffect, useState } from 'react';
+import "./userHome.css";
 
-export default function Quiz() {
+export default function UserHome({ userData }) {
+  const [questions, setQuestions] = useState([]);
 
-    function onNext(){
-        console.log("Next question")
-    }
-    function onPre(){
-        console.log("Previous question")
-    }
+  useEffect(() => {
+    fetch("http://localhost:5000/getQuestions", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data, "queDetails");
 
-    return(
-        <div className="auth-wrapper">
-            <div className="auth-inner glass">
-                <h3>Questions</h3>
+        // Check if the data structure is as expected
+        console.log("API response data:", data);
 
-                {/* Questions display */}
-                <Questions></Questions>
+        // If the structure is correct, proceed with setting state
+        if (data && data.data && Array.isArray(data.data)) {
+          // Set the state with the extracted data
+          setQuestions(data.data);
+        } else {
+          console.error("Unexpected API response format:", data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching questions:", error);
+      });
+  }, []);
 
-                <div className="btn">
-                    <button className="prev" onClick={onPre}>Previous</button>
-                    <button className="next" onClick={onNext}>Next</button>
-                </div>
-            </div>
-        </div>
+  return (
+    <div className='auth-wrapper'>
+      <div className='auth-inner glass'>
+        <h3>Questions</h3>
+        {/* Now you can use the extracted data in your component */}
+        {/* For example, you can map through the questions and render them */}
+        {questions.map((question, index) => (
+          <div key={index}>
+            <p>Question: {question.que}</p>
+            <form>
+              {/* Check if choices is defined before mapping */}
+              {question.choices &&
+                question.choices.map((choice, choiceIndex) => (
+                  <div key={choiceIndex}>
+                    <input
+                      type="radio"
+                      id={`choices${choiceIndex}`}
+                      name={`question${index}`}
+                      value={choice}
+                    />
+                    <label htmlFor={`choices${choiceIndex}`}>{choice}</label>
+                  </div>
+                ))}
+            </form>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
+    // function onNext(){
+    //     console.log("Next question")
+    // }
+    // function onPre(){
+    //     console.log("Previous question")
+    // }
+
+    // return(
+    //     <div className="auth-wrapper">
+    //         <div className="auth-inner glass">
+    //             <h3>Questions</h3>
+
+    //             {/* Questions display */}
+    //             <Questions></Questions>
+
+    //             <div className="btn">
+    //                 <button className="prev" onClick={onPre}>Previous</button>
+    //                 <button className="next" onClick={onNext}>Next</button>
+    //             </div>
+    //         </div>
+    //     </div>
 
         
 
-    )
-}
+    // )
+// }
+
+
