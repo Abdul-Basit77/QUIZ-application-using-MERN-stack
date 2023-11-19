@@ -12,15 +12,18 @@ const JWT_SECRET ="acbyrgfdv68231386()cdsuhf[]864jsahcxh/?";
 const mongoUrl = "mongodb+srv://abdulbasit:codeSS@cluster0.794s6ej.mongodb.net/?retryWrites=true&w=majority"
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
+    useUnifiedTopology: true 
   })
   .then(() => {
     console.log("Connected to database");
   })
   .catch((e) => console.log(e));
 
+//authentication API
 require("./schema/userDetails");
 const User = mongoose.model("UserInfo");
 
+//signup
 app.post("/register", async (req, res) => {
   const { name, email, password,userType } = req.body;
 
@@ -43,6 +46,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
+//login
 app.post("/login-user", async (req, res) => {
   const { email, password } = req.body;
 
@@ -52,7 +56,7 @@ app.post("/login-user", async (req, res) => {
   }
   if (await bcrypt.compare(password, user.password)) {
     const token = jwt.sign({email: user.email}, JWT_SECRET, {
-      expiresIn: "15m",
+      expiresIn: "60m",
     });
 
     if (res.status(201)) {
@@ -64,6 +68,7 @@ app.post("/login-user", async (req, res) => {
   res.json({ status: "error", error: "InvAlid Password" });
 });
 
+//get user details
 app.post("/userData", async (req, res) => {
   const { token } = req.body;
   try {
@@ -90,35 +95,31 @@ app.post("/userData", async (req, res) => {
 });
 
 // question answer API
-require("./schema/questions")
+require("./schema/quizDetails")
 const Que = mongoose.model("QueAns");
 
-// Inside your app.post("/uploadQue", ...) route
+//uploading quiz
 app.post("/uploadQue", async (req, res) => {
   try {
-    const { type, que, choices, answer, score } = req.body;
+    const { topic, totalQuestions, totalScore, totalTime, questions } = req.body;
 
-    // Your existing code for creating the question
     await Que.create({
-      type,
-      que,
-      choices,
-      answer,
-      score
+      topic,
+      totalQuestions,
+      totalScore,
+      totalTime,
+      questions,
     });
 
-    // Send a success response
     res.json({ status: "ok" });
   } catch (error) {
-    console.error("Error in uploading question:", error);
-    // Log the error stack trace
+    console.error("Error in uploading questions:", error);
     console.error(error.stack);
-
-    // Send an error response
     res.status(500).json({ status: "error", message: "An error occurred. Please try again." });
   }
 });
 
+//get quiz details
 app.get("/getQuestions" , async (req, res) => {
   try{
     const queDetails = await Que.find({});

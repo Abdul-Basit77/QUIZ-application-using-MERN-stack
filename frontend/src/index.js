@@ -13,6 +13,15 @@ import UserDetails from "./main/userDetails";
 import Quiz from './main/quiz';
 
 function App() {
+
+  const Logout = () => {
+    window.localStorage.clear();
+    window.location.href = "/login";
+  };
+
+  const excludedRoutes = ['/home', '/aboutUs', '/login', '/signup'];
+  const showLogoutLink = !excludedRoutes.includes(window.location.pathname);
+
   return (
     <Router>
       <div className="App">
@@ -22,28 +31,39 @@ function App() {
           </div>
           
           <div className="nav-right">
-            <ul className="nav-list">
-              <li className="nav-item">
-                <Link className="nav-link" to="/">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/signup">
-                  Sign up
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/aboutUs">
-                  About Us
-                </Link>
-              </li>
-            </ul>
+              {!showLogoutLink && (
+                <ul className="nav-list">
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/">
+                      Home
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/login">
+                      Login
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/signup">
+                      Sign up
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/aboutUs">
+                      About Us
+                    </Link>
+                  </li>
+                </ul>
+              )}
+              {showLogoutLink && (
+                <ul className="nav-list">
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/login" onClick={Logout}>
+                      Logout
+                    </Link>
+                  </li>
+                </ul>
+              )}
           </div>
         </nav>
 
