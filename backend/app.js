@@ -5,11 +5,10 @@ app.use(express.json());
 const cors = require("cors");
 app.use(cors());
 const bcrypt = require("bcryptjs");
-
+require("dotenv").config()
 const jwt = require("jsonwebtoken");
-const JWT_SECRET ="acbyrgfdv68231386()cdsuhf[]864jsahcxh/?";
 
-const mongoUrl = "mongodb+srv://abdulbasit:codeSS@cluster0.794s6ej.mongodb.net/?retryWrites=true&w=majority"
+const mongoUrl=process.env.mongoUrl;
 mongoose.connect(mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true 
@@ -55,7 +54,7 @@ app.post("/login-user", async (req, res) => {
     return res.json({ error: "User Not found" });
   }
   if (await bcrypt.compare(password, user.password)) {
-    const token = jwt.sign({email: user.email}, JWT_SECRET, {
+    const token = jwt.sign({email: user.email}, process.env.JWT_SECRET, {
       expiresIn: "60m",
     });
 
@@ -72,7 +71,7 @@ app.post("/login-user", async (req, res) => {
 app.post("/userData", async (req, res) => {
   const { token } = req.body;
   try {
-    const user = jwt.verify(token, JWT_SECRET, (err, res) => {
+    const user = jwt.verify(token, process.env.JWT_SECRET, (err, res) => {
       if (err) {
         return "token expired";
       }
@@ -100,9 +99,12 @@ const Que = mongoose.model("QueAns");
 
 //uploading quiz
 app.post("/uploadQue", async (req, res) => {
+  const { topic, totalQuestions, totalScore, totalTime, questions } = req.body;
   try {
-    const { topic, totalQuestions, totalScore, totalTime, questions } = req.body;
-
+    const oldQuiz = await Res.findOne({ topic });
+    if (oldQuiz) {
+      return res.json({ error: "Quiz by this topic already exists" });
+    }
     await Que.create({
       topic,
       totalQuestions,
@@ -119,13 +121,60 @@ app.post("/uploadQue", async (req, res) => {
   }
 });
 
-//get quiz details
-app.get("/getQuestions" , async (req, res) => {
-  try{
-    const queDetails = await Que.find({});
-    res.send({status: "ok", data: queDetails});
-  }catch(error){
-    console.log(error);
+// API to get all available quizzes
+app.get("/getQuizzes", async (req, res) => {
+  try {
+    const quizzes = await Que.find({}, { _id: 1, topic: 1, totalQuestions: 1, totalScore: 1, totalTime: 1 });
+
+    res.json({ status: "ok", quizzes });
+  } catch (error) {
+    console.error("Error in getting quizzes:", error);
+    console.error(error.stack);
+    res.status(500).json({ status: "error", message: "An error occurred. Please try again." });
+  }
+});
+
+// API to get details of a specific quiz by ID
+app.get("/getQuiz/:quizTopic", async (req, res) => {
+  try {
+    const { quizTopic } = req.params;
+
+    const quiz = await Que.findOne({ topic: quizTopic });
+
+    if (!quiz) {
+      return res.status(404).json({ status: "error", message: "Quiz not found." });
+    }
+
+    res.json({ status: "ok", quiz });
+  } catch (error) {
+    console.error("Error in getting quiz details:", error);
+    console.error(error.stack);
+    res.status(500).json({ status: "error", message: "An error occurred. Please try again." });
+  }
+});
+
+//Result API
+require("./schema/resultDetails")
+const Res = mongoose.model("Result")
+
+// uploading results
+app.post("/result", async (req, res) => {
+  const { name, topic, obScore } = req.body;
+
+  try {
+    const oldRes = await Res.findOne({ topic });
+
+    if (oldRes) {
+      return res.json({ error: "You have already attempted the Quiz" });
+    }
+    await Res.create({
+      name,
+      topic,
+      obScore,
+    });
+    res.send({ status: "ok" });
+  } catch (error) {
+    res.send({ status: "error" });
   }
 });
 

@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-// import Home from "./home"
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 
@@ -10,17 +9,22 @@ import SignUp from './components/signup.component'
 import Home from './components/homePage'
 import AboutUs from './components/aboutPage'
 import UserDetails from "./main/userDetails";
-import Quiz from './main/quiz';
+import Quiz from './quizHome/quiz';
+import QuestionForm from './quizHome/createQuiz';
+import Result from './quizHome/result';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = window.localStorage.getItem('token');
+    setIsAuthenticated(!!token);
+  }, []);
 
   const Logout = () => {
     window.localStorage.clear();
     window.location.href = "/login";
   };
-
-  const excludedRoutes = ['/home', '/aboutUs', '/login', '/signup'];
-  const showLogoutLink = !excludedRoutes.includes(window.location.pathname);
 
   return (
     <Router>
@@ -31,7 +35,15 @@ function App() {
           </div>
           
           <div className="nav-right">
-              {!showLogoutLink && (
+            {isAuthenticated ? (
+              <ul className="nav-list">
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login" onClick={Logout}>
+                    Logout
+                  </Link>
+                </li>
+              </ul>
+              ) : (
                 <ul className="nav-list">
                   <li className="nav-item">
                     <Link className="nav-link" to="/">
@@ -55,15 +67,6 @@ function App() {
                   </li>
                 </ul>
               )}
-              {showLogoutLink && (
-                <ul className="nav-list">
-                  <li className="nav-item">
-                    <Link className="nav-link" to="/login" onClick={Logout}>
-                      Logout
-                    </Link>
-                  </li>
-                </ul>
-              )}
           </div>
         </nav>
 
@@ -74,7 +77,9 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/userDetails" element={<UserDetails />} />
-            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/createquiz" element={<QuestionForm />} />
+            <Route path="/quiz/:quizTopic" element={<Quiz />} />
+            <Route path="/results" element={<Result />} />
           </Routes>
         </div>
       </div>

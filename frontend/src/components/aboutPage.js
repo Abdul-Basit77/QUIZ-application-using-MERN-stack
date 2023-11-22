@@ -1,5 +1,5 @@
 import React from 'react'
-
+import ("./page.css")
 export default function AboutUs(){
   return (
     <div className="card " >

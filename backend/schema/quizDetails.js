@@ -10,7 +10,7 @@ const QueDetailSchema = new mongoose.Schema({
 
 const QueAnsSchema = new mongoose.Schema(
 {
-  topic: String,
+  topic: { type: String, unique: true },
   totalQuestions: Number,
   totalScore: Number,
   totalTime: Number,
