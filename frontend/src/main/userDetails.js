@@ -5,6 +5,7 @@ import UserHome from "./userHome";
 export default function UserDetails() {
   const [userData, setUserData] = useState("");
   const [admin, setAdmin] = useState(false);
+  const [name, setName] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:5000/userData", {
@@ -22,6 +23,9 @@ export default function UserDetails() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data, "userData");
+        // console.log(data.data.name)
+        setName(data.data.name);
+
         if (data.data.userType === "Admin") {
           setAdmin(true);
         }
@@ -34,7 +38,7 @@ export default function UserDetails() {
           window.location.href = "/login";
         }
       });
-  }, []);
+  }, [name]);
 
-  return admin ? <AdminHome /> : <UserHome userData={userData} />;
+  return admin ? <AdminHome /> : <UserHome userData={userData} name={name}/>;
 }

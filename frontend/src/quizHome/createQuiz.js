@@ -148,9 +148,10 @@ export default function QuestionForm() {
                 <label>Type:</label>
                 <select
                   className='form-control'
+                  style={{ color: 'black'}}
                   onChange={(e) => handleQuestionChange(index, 'type', e.target.value)}
                   value={question.type || 'mcq'}>
-                    <option value="mcq">MCQ</option>
+                    <option value="mcq" >MCQ</option>
                     <option value="maq">MAQ</option>
                     <option value="intType">Integer type</option>
                 </select>

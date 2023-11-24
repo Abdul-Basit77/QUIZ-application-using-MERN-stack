@@ -27,8 +27,7 @@ export default function Login() {
         console.log(data, "userRegister");
         if (data.status === "ok") {
           alert("login successful");
-          window.localStorage.setItem("token", data.data);
-          // window.localStorage.setItem("loggedIn", true);         
+          window.localStorage.setItem("token", data.data);        
           window.location.href = "./userDetails";
         }
       });
@@ -47,10 +46,9 @@ export default function Login() {
               className="form-control"
               placeholder="Enter email"
               onChange={(e) => setEmail(e.target.value)}
-              // style={{ color: 'white' }}
             />
           </div>
-
+          
           <div className="input-box">
             <label>Password</label>
             <input
@@ -61,12 +59,9 @@ export default function Login() {
               style={{ color: 'white' }}
             />
           </div>
-
-          
             <button type="submit">
               Submit
             </button>
-          
           <p className="bottom-text">
               New here : <a href="/signup">Sign Up</a>
           </p>

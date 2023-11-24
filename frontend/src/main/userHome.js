@@ -1,30 +1,11 @@
-// import React from 'react'
-// import "./userHome.css"
-
-// export default function UserHome({ userData }){
-//     return (
-//         <div className="auth-wrapper" style={{ height: "auto" }}>
-//           <div className="auth-inner glass" style={{ width: "auto" }}>
-//             <h3>Welcom User</h3>
-//             <p>
-//               Quiz details will be displayed here
-//               <a href="/quiz" >
-//                 <button>Start Quiz</button>
-//               </a>
-//             </p>
-//           </div>
-//         </div>
-//       );
-    
-// }
-
 import React, { useEffect, useState } from 'react';
 import "./userHome.css";
+import { Link } from 'react-router-dom';
 
-export default function UserHome() {
+export default function UserHome({ name }) {
   const [quizzes, setQuizzes] = useState([]);
-
-  // Fetching the list of available quizzes when the component mounts
+  console.log("Received name in UserHome:", name);
+  // Fetching  list of available quizzes
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
@@ -45,14 +26,14 @@ export default function UserHome() {
 
   return (
     <div className="auth-wrapper" style={{ height: "auto" }}>
-      <div className="auth-inner glass" style={{ width: "auto" }}>
-        <h3>Welcome User</h3>
-        <p>
+      <div className="auth-inner glass" style={{ width: "auto", height: "400px"  }}>
+        <h3>Welcome  {name}</h3>
+        <p style={{ display: "flex",justifyContent:"center", alignItems:"center", fontSize:"1.2rem"}}>Select A Quiz To Start</p>
           {
             quizzes.length > 0 ? (
-              <ul>
+              <ul style={{display: "flex" }}>
                 {quizzes.map((quiz) => (
-                  <li key={quiz._id}>
+                  <li  style={{marginLeft:"20px",marginBottom:"20px"}} key={quiz._id}>
                     <strong>Topic:</strong> {quiz.topic}
                     <br />
                     <strong>Total Questions:</strong> {quiz.totalQuestions}
@@ -61,18 +42,16 @@ export default function UserHome() {
                     <br />
                     <strong>Total Time:</strong> {quiz.totalTime}
                     <br />
-                    <a href={`/quiz/${quiz.topic}`}>
-                      <button>Start Quiz</button>
-                    </a>
-
+                    <Link to={`/quiz/${quiz.topic}?name=${encodeURIComponent(name)}`}>
+                      <button style={{marginTop:"20px"}}>Start Quiz</button>
+                    </Link>
                   </li>
                 ))}
+                
               </ul>
-            ) : (
-              "No quizzes available."
-            )
+            ) : ("No quizzes available.")
           }
-        </p>
+        
       </div>
     </div>
   );

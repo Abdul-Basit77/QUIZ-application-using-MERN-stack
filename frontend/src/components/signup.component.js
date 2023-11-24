@@ -6,10 +6,10 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("");
-  const [secretKey, setSecretKey] = useState("");
+  const [adminKey, setAdminKey] = useState("");
 
   const handleSubmit = (e) => {
-    if (userType === "Admin" && secretKey !== "6164") {
+    if (userType === "Admin" && adminKey !== "6164") {
       e.preventDefault();
       alert("Invalid Admin");
     } else {
@@ -41,7 +41,6 @@ export default function SignUp() {
           }
         });
     }
-  // window.location.href = "/sign-in"
   };
 
   return (
@@ -70,12 +69,12 @@ export default function SignUp() {
           </div>
           {userType === "Admin" ? (
             <div className="input-box">
-              <label>Secret Key</label>
+              <label>Admin Key</label>
               <input
                 type="password"
                 className="form-control"
-                placeholder="Secret Key"
-                onChange={(e) => setSecretKey(e.target.value)}
+                placeholder="Admin Key"
+                onChange={(e) => setAdminKey(e.target.value)}
               />
             </div>
           ) : null}

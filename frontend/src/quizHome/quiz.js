@@ -4,29 +4,33 @@ import "../main/userHome.css";
 
 export default function Quiz() {
   const [questions, setQuestions] = useState([]);
-  const [selectedAnswers, setSelectedAnswers] = useState([]); // Array to store selected answers
-  const [correctAnswers, setCorrectAnswers] = useState([]); // Array to store correct answers
-  const [scores, setScores] = useState([]); // Array to store scores
-  const { quizTopic } = useParams(); 
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [correctAnswers, setCorrectAnswers] = useState([]); 
+  const [scores, setScores] = useState([]); 
+  const { quizTopic } = useParams();
+  const name = new URLSearchParams(window.location.search).get('name');
 
-  // Function to check if two arrays are equal
+  // Function to check answer array
   function arraysEqual(arr1, arr2) {
-    return arr1.length === arr2.length && arr1.every((value, index) => value === arr2[index]);
+    const sortedArr1 = [...arr1].sort();
+    const sortedArr2 = [...arr2].sort();
+    return sortedArr1.length === sortedArr2.length && sortedArr1.every((value, index) => value === sortedArr2[index]);
   }
 
   useEffect(() => {
-    // Fetching questions for the specific topic using the quizTopic
+    console.log('quizTopic:', quizTopic);
+
     fetch(`http://localhost:5000/getQuiz/${quizTopic}`, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data, "queDetails");
-
+        console.log('name:', name);
         console.log("API response data:", data);
 
         if (data.status === "ok" && data.quiz.questions && Array.isArray(data.quiz.questions)) {
-          // Initialize arrays with empty values for each question
+          
           setSelectedAnswers(Array(data.quiz.questions.length).fill([]));
           setCorrectAnswers(data.quiz.questions.map(question => question.correctAnswers.map(choice => parseInt(choice))));
           setScores(data.quiz.questions.map(question => question.score));
@@ -38,64 +42,64 @@ export default function Quiz() {
       .catch((error) => {
         console.error("Error fetching questions:", error);
       });
-  }, [quizTopic]);
+  }, [quizTopic, name]);
 
   const handleAnswerChange = (index, choiceIndex) => {
     const newSelectedAnswers = [...selectedAnswers];
-    // newSelectedAnswers[index] = [...newSelectedAnswers[index], choiceIndex];
+    
     if (questions[index].type === 'intType') {
-      // For intType questions, store only the selected integer as a string
-      newSelectedAnswers[index] = [choiceIndex];
+      
+      newSelectedAnswers[index] = [parseInt(choiceIndex, 10)];
     } else {
-      // For other types of questions, store the selected choices as an array of strings
-      newSelectedAnswers[index] = [...newSelectedAnswers[index], choiceIndex];
+       
+      const selectedChoices = newSelectedAnswers[index] || []; 
+      const updatedChoices = selectedChoices.includes(choiceIndex)
+        ? selectedChoices.filter((choice) => choice !== choiceIndex)
+        : [...selectedChoices, choiceIndex];
+
+      newSelectedAnswers[index] = updatedChoices;
     }
     setSelectedAnswers(newSelectedAnswers);
   };
 
-   // Handle quiz submission
+   // Quiz submission
    const submitQuiz = () => {
-    // Initialize obScore to 0
+    
     let obScore = 0;
 
-    // Iterate over each question and compare selected and correct answers
     for (let i = 0; i < selectedAnswers.length; i++) {
-      // If selected answer matches the correct answer index, increase the obScore
       if (arraysEqual(selectedAnswers[i], correctAnswers[i])) {
         obScore += scores[i];
       }
     }
 
-    // Log the cumulative score
     console.log('obScore:', obScore);
+    fetch('http://localhost:5000/result', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        quizTopic,
+        obScore,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 'already attempted') {
+          alert("You have already attempted this Quiz");
+        }else{
+        console.log('Server response:',data); 
+        }
+        alert("Your Score is: " + obScore);
+      })
+      .catch((error) => {
+        console.error('Error submitting quiz:', error);
+      });
 
-    // Send the obScore to the server (if needed)
-    // fetch('http://localhost:5000/submitQuiz', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     quizTopic,
-    //     selectedAnswers,
-    //     obScore,
-    //   }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log(data); // Display or store the final score
-    //
-    //     // Navigate to the "/results" page
-    //     history.push('/results');
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error submitting quiz:', error);
-    //   });
-
-    // Log the selected answers, correct answers, and scores (for testing purposes)
     console.log('Selected Answers:', selectedAnswers);
     console.log('Correct Answers:', correctAnswers);
-    console.log('Scores:', scores);
   };
 
   return (
@@ -137,9 +141,6 @@ export default function Quiz() {
           </div>
         ))}
         <button onClick={submitQuiz}>Submit Quiz</button>
-        {/* <a href={`/results`}> */}
-          {/* <button>Submit Quiz</button> */}
-        {/* </a> */}
       </div>
     </div>
   );

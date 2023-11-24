@@ -11,7 +11,6 @@ import AboutUs from './components/aboutPage'
 import UserDetails from "./main/userDetails";
 import Quiz from './quizHome/quiz';
 import QuestionForm from './quizHome/createQuiz';
-import Result from './quizHome/result';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -79,7 +78,6 @@ function App() {
             <Route path="/userDetails" element={<UserDetails />} />
             <Route path="/createquiz" element={<QuestionForm />} />
             <Route path="/quiz/:quizTopic" element={<Quiz />} />
-            <Route path="/results" element={<Result />} />
           </Routes>
         </div>
       </div>

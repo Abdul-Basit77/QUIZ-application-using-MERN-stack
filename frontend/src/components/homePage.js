@@ -3,7 +3,7 @@ import "./page.css";
 
 export default function Home() {
   return (
-    <div className="card " >
+    <div style={{marginTop:"35px"}} className="card " >
       <h3>Apollo's Oracle</h3>
         <p>
         Knowledge Sangam is a Quiz App inspired by Apollo's Oracle which will serve as a modern day equivalent 

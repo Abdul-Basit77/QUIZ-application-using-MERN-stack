@@ -101,7 +101,7 @@ const Que = mongoose.model("QueAns");
 app.post("/uploadQue", async (req, res) => {
   const { topic, totalQuestions, totalScore, totalTime, questions } = req.body;
   try {
-    const oldQuiz = await Res.findOne({ topic });
+    const oldQuiz = await Que.findOne({ topic });
     if (oldQuiz) {
       return res.json({ error: "Quiz by this topic already exists" });
     }
@@ -124,7 +124,7 @@ app.post("/uploadQue", async (req, res) => {
 // API to get all available quizzes
 app.get("/getQuizzes", async (req, res) => {
   try {
-    const quizzes = await Que.find({}, { _id: 1, topic: 1, totalQuestions: 1, totalScore: 1, totalTime: 1 });
+    const quizzes = await Que.find({}, {  topic: 1, totalQuestions: 1, totalScore: 1, totalTime: 1 });
 
     res.json({ status: "ok", quizzes });
   } catch (error) {
@@ -159,24 +159,32 @@ const Res = mongoose.model("Result")
 
 // uploading results
 app.post("/result", async (req, res) => {
-  const { name, topic, obScore } = req.body;
+  const { name, quizTopic, obScore } = req.body;
 
   try {
-    const oldRes = await Res.findOne({ topic });
+    // const oldRes = await Res.findOne({ name, quizTopic });
 
-    if (oldRes) {
-      return res.json({ error: "You have already attempted the Quiz" });
-    }
+    // if (oldRes) {
+    //   return res.json({ error: "You have already attempted the Quiz" });
+    // }
+
     await Res.create({
       name,
-      topic,
+      quizTopic,
       obScore,
     });
+
     res.send({ status: "ok" });
   } catch (error) {
-    res.send({ status: "error" });
+    if (error.code === 11000) {
+      // Duplicate key error
+      return res.send({ status: "already attempted" });
+    }
+    console.error("Error processing result:", error);
+    res.status(500).json({ status: "error", message: error.message });
   }
 });
+
 
 app.listen(5000, () => {
   console.log("Server Started, Connecting to DataBase...");

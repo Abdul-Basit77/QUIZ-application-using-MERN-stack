@@ -2,7 +2,7 @@ import React from 'react'
 import ("./page.css")
 export default function AboutUs(){
   return (
-    <div className="card " >
+    <div style={{marginTop:"35px"}} className="card " >
     <h3>About Us</h3>
       <p>We are Web Wizard's <br/>A team of sophomores from Motilal Nehru National Institute Of Technology.</p>
         <ul>

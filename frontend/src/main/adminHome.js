@@ -256,15 +256,15 @@ export default function AdminHome() {
   }, []);
 
   return (
-    <div className="auth-wrapper" style={{ height: "auto" }}>
-      <div className="auth-inner glass" style={{ width: "auto" }}>
+    <div className="auth-wrapper " style={{ height: "auto" }}>
+      <div className="auth-inner glass" style={{ width: "auto", height: "400px"  }}>
         <h3>Welcome Admin</h3>
-        <p>Available Quizes
+        <p style={{ display: "flex",justifyContent:"center", alignItems:"center", fontSize:"1.2rem"}}>Available Quizes</p>
           {
             quizzes.length > 0 ? (
-              <ul>
+              <ul style={{display: "flex" }}>
                 {quizzes.map((quiz) => (
-                  <li key={quiz._id}>
+                  <li style={{marginLeft:"20px",marginBottom:"10px"}} key={quiz._id}>
                     <strong>Topic:</strong> {quiz.topic}
                     <br />
                     <strong>Total Questions:</strong> {quiz.totalQuestions}
@@ -275,15 +275,15 @@ export default function AdminHome() {
                     <br />
                   </li>
                 ))}
-                <a href={`/createquiz`}>
-                      <button>Create New Quiz</button>
-                </a>
               </ul>
             ) : (
               "No quizzes available."
             )
           }
-        </p>
+        
+          <a style={{display:"flex", justifyContent:"center", alignItems:"center"}} href={`/createquiz`}>
+              <button style={{width:"20%"}}>Create New Quiz</button>
+          </a>
       </div>
     </div>
   );
