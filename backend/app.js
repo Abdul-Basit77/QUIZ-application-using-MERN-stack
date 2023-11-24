@@ -162,12 +162,6 @@ app.post("/result", async (req, res) => {
   const { name, quizTopic, obScore } = req.body;
 
   try {
-    // const oldRes = await Res.findOne({ name, quizTopic });
-
-    // if (oldRes) {
-    //   return res.json({ error: "You have already attempted the Quiz" });
-    // }
-
     await Res.create({
       name,
       quizTopic,
